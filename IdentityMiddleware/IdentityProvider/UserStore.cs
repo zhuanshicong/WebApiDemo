@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityMiddleware.IdentityProvider.Model;
+using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace IdentityMiddleware.IdentityProvider
@@ -193,17 +194,26 @@ namespace IdentityMiddleware.IdentityProvider
 
         public Task SetPasswordHashAsync(UserModel user, string passwordHash, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (passwordHash == null) throw new ArgumentNullException(nameof(passwordHash));
+            user.PasswordHash = passwordHash;
+            return Task.FromResult<object>(null);
         }
 
         public Task<string> GetPasswordHashAsync(UserModel user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            return Task.FromResult(user.PasswordHash);
         }
 
         public Task<bool> HasPasswordAsync(UserModel user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            return Task.FromResult(!user.PasswordHash.IsNullOrEmpty());
+            //throw new NotImplementedException();
         }
     }
 }

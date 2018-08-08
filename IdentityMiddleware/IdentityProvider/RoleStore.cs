@@ -10,59 +10,100 @@ namespace IdentityMiddleware.IdentityProvider
 {
     public class RoleStore:IRoleStore<RoleModel>
     {
+        private readonly RoleTable _roleTable;
+
+        public RoleStore(RoleTable roleTable)
+        {
+            _roleTable = roleTable;
+        }
         public void Dispose()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public Task<IdentityResult> CreateAsync(RoleModel role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            return _roleTable.InsertAsync(role);
+            //throw new NotImplementedException();
         }
 
         public Task<IdentityResult> UpdateAsync(RoleModel role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            return _roleTable.UpdateAsync(role);
+            
+            //throw new NotImplementedException();
         }
 
         public Task<IdentityResult> DeleteAsync(RoleModel role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            return _roleTable.DeleteAsync(role);
+            //throw new NotImplementedException();
         }
 
         public Task<string> GetRoleIdAsync(RoleModel role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            return Task.FromResult(role.Id.ToString());
+            //throw new NotImplementedException();
         }
 
         public Task<string> GetRoleNameAsync(RoleModel role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            return Task.FromResult(role.RoleName);
+            //throw new NotImplementedException();
         }
 
         public Task SetRoleNameAsync(RoleModel role, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            if (roleName == null) throw new ArgumentNullException(nameof(roleName));
+            role.RoleName = roleName;
+            return Task.FromResult<object>(null);
+            //throw new NotImplementedException();
         }
 
         public Task<string> GetNormalizedRoleNameAsync(RoleModel role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            return Task.FromResult(role.RoleName);
+            //throw new NotImplementedException();
         }
 
         public Task SetNormalizedRoleNameAsync(RoleModel role, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            if (normalizedName == null) throw new ArgumentNullException(nameof(normalizedName));
+            role.RoleName = normalizedName;
+            return Task.FromResult<object>(null);
+            //throw new NotImplementedException();
         }
 
         public Task<RoleModel> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (roleId == null) throw new ArgumentNullException(nameof(roleId));
+            return _roleTable.FindByIdAsync(roleId);
+            //throw new NotImplementedException();
         }
 
         public Task<RoleModel> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (normalizedRoleName == null) throw new ArgumentNullException(nameof(normalizedRoleName));
+            return _roleTable.FindByNameAsync(normalizedRoleName);
+            //throw new NotImplementedException();
         }
     }
 }
