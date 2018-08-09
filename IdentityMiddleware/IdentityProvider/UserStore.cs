@@ -23,6 +23,7 @@ namespace IdentityMiddleware.IdentityProvider
 
         public void Dispose()
         {
+            _userTable.ConnectionClose();
             //throw new NotImplementedException();
         }
 
@@ -51,6 +52,7 @@ namespace IdentityMiddleware.IdentityProvider
 
         public Task<string> GetNormalizedUserNameAsync(UserModel user, CancellationToken cancellationToken)
         {
+            //throw new NotImplementedException();
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null) throw new ArgumentNullException(nameof(user));
             return Task.FromResult(user.UserName);
@@ -58,6 +60,7 @@ namespace IdentityMiddleware.IdentityProvider
 
         public Task SetNormalizedUserNameAsync(UserModel user, string normalizedName, CancellationToken cancellationToken)
         {
+            //throw new NotImplementedException();
             cancellationToken.ThrowIfCancellationRequested();
             //if (user == null) throw new ArgumentNullException(nameof(user));
             //if (normalizedName == null) throw new ArgumentNullException(nameof(normalizedName));
@@ -65,11 +68,11 @@ namespace IdentityMiddleware.IdentityProvider
             return Task.FromResult<object>(null);
         }
 
-        public Task<IdentityResult> CreateAsync(UserModel user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(UserModel user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null) throw new ArgumentNullException(nameof(user));
-            return _userTable.InsertAsync(user);
+            return await _userTable.InsertAsync(user);
             //throw new NotImplementedException();
         }
 
@@ -101,11 +104,12 @@ namespace IdentityMiddleware.IdentityProvider
             //throw new NotImplementedException();
         }
 
-        public Task<UserModel> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public async Task<UserModel> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (normalizedUserName == null) throw new ArgumentNullException(nameof(normalizedUserName));
-            return _userTable.FindByUserName(normalizedUserName);
+            //var test=await _userTable.FindByUserName(normalizedUserName);
+            return await _userTable.FindByUserName(normalizedUserName);
             //throw new NotImplementedException();
         }
 

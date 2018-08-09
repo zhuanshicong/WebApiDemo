@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using IdentityMiddleware.IdentityProvider.Model;
@@ -18,7 +19,53 @@ namespace IdentityMiddleware.IdentityProvider
         public UserTable(MySqlConnection connection)
         {
             _connection = connection;
-            //_connection.Open();
+            ConnectionOpen();
+        }
+
+        private void ConnectionOpen()
+        {
+            var retries = 3;
+            try
+            {
+                if (_connection.State == ConnectionState.Open)
+                {
+                    return;
+                }
+                else
+                {
+                    while (retries >= 0 && _connection.State != ConnectionState.Open)
+                    {
+                        _connection.Open();
+                        retries--;
+                        Thread.Sleep(30);
+                    }
+                }
+            }
+            catch (MySqlException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+        }
+
+        public void ConnectionClose()
+        {
+            try
+            {
+                if (_connection.State == ConnectionState.Open)
+                {
+                    _connection.Close();
+                }
+                _connection.Dispose();
+                GC.Collect();
+            }
+            catch (MySqlException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
         }
         public async Task<IdentityResult> InsertAsync(UserModel user)
         {
@@ -93,7 +140,7 @@ namespace IdentityMiddleware.IdentityProvider
             try
             {
                 string sql = @"select * from useridentity.user where UserName=@UserName;";
-                var userResult = await _connection.QuerySingleAsync<UserModel>(sql, new { UserName = userName });
+                var userResult = await _connection.QuerySingleOrDefaultAsync<UserModel>(sql, new { UserName = userName });
                 return userResult;
                 //return IdentityResult.Failed(new IdentityError { Description = $"Could not delete user {user.UserName}." });
             }

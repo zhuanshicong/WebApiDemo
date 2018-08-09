@@ -22,20 +22,20 @@ namespace IdentityMiddleware
         {
             return new List<Client>
             {
-                new Client
-                {
-                    ClientId = "client",
-
-                    // no interactive user, use the clientid/secret for authentication
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    // secret for authentication
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
-                    // scopes that client has access to
-                    AllowedScopes = { "Scope1" }
-                },
+                //new Client
+                //{
+                //    ClientId = "client",
+                //    ClientName = "Client",
+                //    // no interactive user, use the clientid/secret for authentication
+                //    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                //    // secret for authentication
+                //    ClientSecrets =
+                //    {
+                //        new Secret("secret".Sha256())
+                //    },
+                //    // scopes that client has access to
+                //    AllowedScopes = { "Scope1" }
+                //},
                 new Client
                 {
                     ClientId = "client1",
