@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using IdentityMiddleware.IdentityProvider;
 using IdentityMiddleware.IdentityProvider.Model;
+using IdentityModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +31,9 @@ namespace IdentityMiddleware
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddAuthorization();
+
+            //添加MS的Identity实现
             services.AddIdentity<UserModel, RoleModel>(options =>
                 {
                     // Password settings.
@@ -51,6 +56,7 @@ namespace IdentityMiddleware
                 })
                 .AddDefaultTokenProviders();
 
+            //添加实现Ms的Identity实现中需要用到的自定义存储实现
             string connectionString = Configuration.GetConnectionString("MySqlConnection");
             services.AddTransient<MySqlConnection>(e => new MySqlConnection(connectionString));
             services.AddTransient<UserTable>();
@@ -60,15 +66,31 @@ namespace IdentityMiddleware
             services.AddTransient<IUserRoleStore<UserModel>, UserStore>();
             services.AddTransient<IUserPasswordStore<UserModel>, UserStore>();
             services.AddTransient<IRoleStore<RoleModel>, RoleStore>();
-            
-            
+
+            //添加IdentityServer4
             services.AddIdentityServer()
+                //添加储存和test
                 .AddDeveloperSigningCredential()
                 .AddInMemoryPersistedGrants()
+                //添加资源
                 .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                //添加客户端
                 .AddInMemoryClients(Config.GetClients())
+                //添加用户
                 .AddTestUsers(Config.GetUsers())
                 .AddAspNetIdentity<UserModel>();
+
+
+            //services.AddAuthentication("Bearer")
+            //    .AddIdentityServerAuthentication(options =>
+            //    {
+            //        options.Authority = "http://localhost:5000";
+            //        options.RequireHttpsMetadata = false;
+            //        options.ApiName = "api1";
+            //        options.RoleClaimType = JwtClaimTypes.Role;
+            //        options.NameClaimType = JwtClaimTypes.Name;
+            //    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,6 +105,7 @@ namespace IdentityMiddleware
                 app.UseHsts();
             }
             app.UseIdentityServer();
+            //app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
         }
     }

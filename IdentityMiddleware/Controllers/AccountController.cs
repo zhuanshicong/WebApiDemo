@@ -49,12 +49,46 @@ namespace IdentityMiddleware.Controllers
                     //return RedirectToLocal(returnUrl);
                 }
 
-                return BadRequest();
-            }
-            else
-            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.Code,item.Description);
+                }
                 return BadRequest(ModelState);
             }
+
+            return BadRequest(ModelState);
+        }
+
+
+
+        [HttpGet("Test")]
+        [Authorize]
+        public IActionResult Test()
+        {
+            return Ok();
+        }
+        [HttpPost("AddUserRole")]
+        
+        public async Task<IActionResult> AddUserRole(AddUserRoleModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var userModel = await _userManager.FindByNameAsync(model.UserName);
+                var result = await _userManager.AddToRolesAsync(userModel, model.RoleNames);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.Code, item.Description);
+                }
+                return BadRequest(ModelState);
+            }
+
+            return BadRequest(ModelState);
         }
     }
 }

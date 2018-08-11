@@ -7,7 +7,8 @@ namespace IdentityMiddleware.IdentityProvider.Model
 {
     public class RoleModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string RoleName { get; set; }
     }
+
 }

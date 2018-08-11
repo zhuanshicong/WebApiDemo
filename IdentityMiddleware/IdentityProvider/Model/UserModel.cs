@@ -9,7 +9,7 @@ namespace IdentityMiddleware.IdentityProvider.Model
 {
     public class UserModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string UserName { get; set; }
 
         public string NickName { get; set; }
@@ -33,5 +33,14 @@ namespace IdentityMiddleware.IdentityProvider.Model
         public string ConfirmPassword { get; set; }
 
 
+    }
+
+    public class AddUserRoleModel
+    {
+        [Required]
+        public string UserName { get; set; }
+
+        [Required]
+        public string[] RoleNames { get; set; }
     }
 }

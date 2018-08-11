@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +17,8 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            ClaimsPrincipal principal = HttpContext.User;
+            var testtt=HttpContext.User.IsInRole("Root");
             return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
     }

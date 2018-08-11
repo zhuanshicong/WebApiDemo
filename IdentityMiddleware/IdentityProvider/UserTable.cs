@@ -72,7 +72,7 @@ namespace IdentityMiddleware.IdentityProvider
             string sql = @"insert into useridentity.user values(@Id,@UserName,@NickName,@PasswordHash,@JoinDate,@Comments)";
             try
             {
-                int rows = await _connection.ExecuteAsync(sql, new { Id = user.Id, UserName = user.UserName, NickName = user.NickName, PasswordHash = user.PasswordHash, JoinDate = DateTime.Now, Comments = user.Comments });
+                int rows = await _connection.ExecuteAsync(sql, new { Id = user.Id, UserName = user.UserName, NickName = user.NickName, PasswordHash = user.PasswordHash, JoinDate = DateTime.Now, Comments = user.Comments??"" });
                 if (rows > 0)
                 {
                     return IdentityResult.Success;
@@ -108,7 +108,7 @@ namespace IdentityMiddleware.IdentityProvider
             try
             {
                 string sql = @"update useridentity.user set NickName=@NickName Comments=@Comments  where Id=@Id";
-                int rows = await _connection.ExecuteAsync(sql, new {NickName=user.NickName,Comments=user.Comments, Id = user.Id });
+                int rows = await _connection.ExecuteAsync(sql, new {NickName=user.NickName,Comments=user.Comments??"", Id = user.Id });
                 if (rows > 0)
                 {
                     return IdentityResult.Success;

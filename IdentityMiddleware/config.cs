@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
@@ -13,7 +15,7 @@ namespace IdentityMiddleware
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1", "My API"),
+                new ApiResource("api1", "My API",new List<string>(){ClaimTypes.Name,JwtClaimTypes.Role,"Area"}),
                 new ApiResource("Scope1", "My Scope")
             };
             
@@ -22,20 +24,6 @@ namespace IdentityMiddleware
         {
             return new List<Client>
             {
-                //new Client
-                //{
-                //    ClientId = "client",
-                //    ClientName = "Client",
-                //    // no interactive user, use the clientid/secret for authentication
-                //    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                //    // secret for authentication
-                //    ClientSecrets =
-                //    {
-                //        new Secret("secret".Sha256())
-                //    },
-                //    // scopes that client has access to
-                //    AllowedScopes = { "Scope1" }
-                //},
                 new Client
                 {
                     ClientId = "client1",
@@ -48,7 +36,8 @@ namespace IdentityMiddleware
                         new Secret("secret1".Sha256())
                     },
                     // scopes that client has access to
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "api1","openid","ClaimsInfo" }
+                    
                 }
             };
         }
@@ -72,5 +61,25 @@ namespace IdentityMiddleware
                 }
             };
     }
-}
+
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new IdentityResource[]
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+                new IdentityResources.Email(),
+                new IdentityResource
+                {
+                    Name = "ClaimsInfo",
+                    DisplayName="ClaimsInfo",
+                    Description="Show user Claims Info.",
+                    UserClaims = new[]{JwtClaimTypes.Role},
+                    ShowInDiscoveryDocument = true,
+                    Required=true,
+                    Emphasize = true
+                }
+            };
+        }
+    }
 }
