@@ -62,7 +62,7 @@ namespace IdentityMiddleware.Controllers
 
 
         [HttpGet("Test")]
-        [Authorize]
+        [Authorize(Roles = "Root")]
         public IActionResult Test()
         {
             return Ok();

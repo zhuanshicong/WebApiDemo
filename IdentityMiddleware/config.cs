@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +17,7 @@ namespace IdentityMiddleware
             return new List<ApiResource>
             {
                 new ApiResource("api1", "My API",new List<string>(){ClaimTypes.Name,JwtClaimTypes.Role,"Area"}),
-                new ApiResource("Scope1", "My Scope")
+                new ApiResource("UserManger", "UserManger Scope",new List<string>(){ClaimTypes.Name,JwtClaimTypes.Role})
             };
             
         }
@@ -36,8 +37,21 @@ namespace IdentityMiddleware
                         new Secret("secret1".Sha256())
                     },
                     // scopes that client has access to
-                    AllowedScopes = { "api1","openid","ClaimsInfo" }
+                    AllowedScopes = { "api1",IdentityServerConstants.StandardScopes.OpenId,"ClaimsInfo" }
                     
+                },
+                new Client{
+                    ClientId = "UserManger",
+                    AllowedGrantTypes =GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets =
+                    {
+                        new Secret("UserMangerSecret".Sha256())
+                    },
+                    AllowedScopes = { 
+                        "UserManger",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "ClaimsInfo" }
                 }
             };
         }
@@ -68,7 +82,7 @@ namespace IdentityMiddleware
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResources.Email(),
+                //new IdentityResources.Email(),
                 new IdentityResource
                 {
                     Name = "ClaimsInfo",
