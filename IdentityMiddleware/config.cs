@@ -37,12 +37,13 @@ namespace IdentityMiddleware
                         new Secret("secret1".Sha256())
                     },
                     // scopes that client has access to
-                    AllowedScopes = { "api1",IdentityServerConstants.StandardScopes.OpenId,"ClaimsInfo" }
+                    AllowedScopes = { "api1",IdentityServerConstants.StandardScopes.OpenId,"ClaimsInfo" },
+                    AllowedCorsOrigins={"http://localhost:5001"},
                     
                 },
                 new Client{
                     ClientId = "UserManger",
-                    AllowedGrantTypes =GrantTypes.ResourceOwnerPassword,
+                    AllowedGrantTypes =GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     ClientSecrets =
                     {
                         new Secret("UserMangerSecret".Sha256())
@@ -52,6 +53,23 @@ namespace IdentityMiddleware
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "ClaimsInfo" }
+                },
+                new Client
+                {
+                    ClientId = "test",
+                    ClientName = "Test Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+                    RedirectUris = { "http://localhost:5003/callback.html" },
+                    PostLogoutRedirectUris = { "http://localhost:5003/index.html" },
+                    AllowedCorsOrigins = { "http://localhost:5003" },
+                    AllowedScopes =
+                    {
+                        "api1",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "ClaimsInfo"
+                    },
                 }
             };
         }

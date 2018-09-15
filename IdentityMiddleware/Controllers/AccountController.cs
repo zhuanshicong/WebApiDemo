@@ -21,7 +21,7 @@ namespace IdentityMiddleware.Controllers
             _userManager = userManager;
         }
         [HttpPost("Register")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Root")]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
@@ -68,7 +68,7 @@ namespace IdentityMiddleware.Controllers
             return Ok();
         }
         [HttpPost("AddUserRole")]
-        
+        [Authorize(Roles = "Root")]
         public async Task<IActionResult> AddUserRole(AddUserRoleModel model)
         {
 
@@ -90,5 +90,7 @@ namespace IdentityMiddleware.Controllers
 
             return BadRequest(ModelState);
         }
+
+
     }
 }

@@ -85,6 +85,8 @@ namespace IdentityMiddleware
                         options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;//"Bearer"
                         options.DefaultChallengeScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;//"Bearer"
                         options.DefaultForbidScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;//"Bearer"
+                        options.DefaultSignInScheme=IdentityServerAuthenticationDefaults.AuthenticationScheme;//"Bearer"
+                        options.DefaultSignOutScheme=IdentityServerAuthenticationDefaults.AuthenticationScheme;//"Bearer"
                         //options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;//"Bearer"
                     })
                 .AddIdentityServerAuthentication(options =>
@@ -113,8 +115,11 @@ namespace IdentityMiddleware
             {
                 app.UseHsts();
             }
+            
             app.UseIdentityServer();
             app.UseAuthentication();
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:5001"));
             app.UseMvcWithDefaultRoute();
         }
     }
