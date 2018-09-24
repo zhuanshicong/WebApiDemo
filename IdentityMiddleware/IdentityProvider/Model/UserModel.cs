@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityMiddleware.Helper;
 using Microsoft.AspNetCore.Identity;
 
 namespace IdentityMiddleware.IdentityProvider.Model
@@ -34,13 +35,41 @@ namespace IdentityMiddleware.IdentityProvider.Model
 
 
     }
+    public class RegisterManyModel
+    {
+        [Required]
+        public string UserName { get; set; }
+        public string NickName { get; set; }
+    }
 
-    public class AddUserRoleModel
+    public class RegisterManyResultModel
+    {
+        public string UserName { get; set; }
+        public bool Reustl { get; set; }
+        public List<RegisterErrNoteModel> ResultNotes { get;set; }
+    }
+
+    public class RegisterErrNoteModel
+    {
+        public string Code { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class EditUserRoleModel
     {
         [Required]
         public string UserName { get; set; }
 
         [Required]
         public string[] RoleNames { get; set; }
+
+        [Required] 
+        [EnumValueValidation(typeof(EditRoleType))]
+        public EditRoleType EditRoleType { get; set; }
+    }
+    public enum EditRoleType
+    {
+        Add,
+        Delete,
     }
 }

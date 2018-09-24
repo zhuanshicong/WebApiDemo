@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityMiddleware.IdentityProvider.Model;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace IdentityMiddleware.IdentityProvider
 {
-    public class RoleStore:IRoleStore<RoleModel>
+    public class RoleStore:IRoleStore<RoleModel>/*,IRoleClaimStore<RoleModel>*/
     {
         private readonly RoleTable _roleTable;
 
@@ -105,5 +106,21 @@ namespace IdentityMiddleware.IdentityProvider
             return _roleTable.FindByNameAsync(normalizedRoleName);
             //throw new NotImplementedException();
         }
+
+        //public Task<IList<Claim>> GetClaimsAsync(RoleModel role, CancellationToken cancellationToken = new CancellationToken())
+        //{
+
+        //    throw new NotImplementedException();
+        //}
+
+        //public Task AddClaimAsync(RoleModel role, Claim claim, CancellationToken cancellationToken = new CancellationToken())
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public Task RemoveClaimAsync(RoleModel role, Claim claim, CancellationToken cancellationToken = new CancellationToken())
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
